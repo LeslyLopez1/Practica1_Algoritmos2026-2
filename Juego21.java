@@ -182,13 +182,13 @@ public class Juego21 {
         //texto de estadistica de la partida en puntos
         resultado = "Dealer: " + puntosDealer;
         if (puntosDealer > 21) {
-            resultado = resultado + " (se pasó)";
+            resultado = resultado;
         }
         for (int i = 0; i < cantidadJugadores; i++) {
             int puntos = getPuntosJugador(i);
             resultado = resultado + "  |  Jugador " + (i + 1) + ": " + puntos;
             if (puntos > 21) {
-                resultado = resultado + " (se pasó)";
+                resultado = resultado;
             }
         }
         //ganador y con que tipo de jugada gano
