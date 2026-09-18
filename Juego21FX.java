@@ -37,6 +37,8 @@ public class Juego21FX {
     private Button nuevo2Btn;
     private Button nuevo3Btn;
     private Button nuevo4Btn;
+    private Button deshacerBtn;
+
     private Scene escena;
 
     public Juego21FX() {
@@ -84,6 +86,8 @@ public class Juego21FX {
         //botones de juego
         pedirBtn = new Button("Pedir carta");
         quedarseBtn = new Button("Quedarse");
+        deshacerBtn = new Button("DESHACER MOVIMIENTO");
+
 
         //botones partida con 1-4 jugadores
         Label nuevoLabel = new Label("Nuevo juego con:");
@@ -93,7 +97,7 @@ public class Juego21FX {
         nuevo3Btn = new Button("3 jugadores");
         nuevo4Btn = new Button("4 jugadores");
 
-        HBox botones = new HBox(12, pedirBtn, quedarseBtn,
+        HBox botones = new HBox(12, pedirBtn, quedarseBtn, deshacerBtn,
                 nuevoLabel, nuevo1Btn, nuevo2Btn, nuevo3Btn, nuevo4Btn);
         botones.setAlignment(Pos.CENTER);
 
@@ -139,10 +143,12 @@ public class Juego21FX {
             mensajeLabel.setText(juego.getResultado());
             pedirBtn.setDisable(true);
             quedarseBtn.setDisable(true);
+            deshacerBtn.setDisable(true);
         } else {
             mensajeLabel.setText("Turno del Jugador " + (juego.getTurno() + 1));
             pedirBtn.setDisable(false);
             quedarseBtn.setDisable(false);
+            deshacerBtn.setDisable(!juego.hayMovimientos());
         }
     }
 
@@ -237,5 +243,9 @@ public class Juego21FX {
 
     public Scene getEscena() {
         return escena;
+    }
+
+    public Button getDeshacerBtn() {
+        return deshacerBtn;
     }
 }
