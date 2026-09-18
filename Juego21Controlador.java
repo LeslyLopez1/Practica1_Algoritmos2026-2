@@ -14,7 +14,6 @@ public class Juego21Controlador extends Application {
     @Override
     public void start(Stage stage) {
         modelo = new Juego21();
-
         vista = new Juego21FX();
 
         conectarBotones();
@@ -27,7 +26,9 @@ public class Juego21Controlador extends Application {
 
     private void conectarBotones() {
         vista.getPedirBtn().setOnAction(evento -> pedirCarta());
-        vista.getPlantarseBtn().setOnAction(evento -> quedarse());
+        vista.getQuedarseBtn().setOnAction(evento -> quedarse());
+        vista.getDeshacerBtn().setOnAction(evento -> deshacer());
+        vista.getNuevo1Btn().setOnAction(evento -> nuevoJuego(1));
         vista.getNuevo2Btn().setOnAction(evento -> nuevoJuego(2));
         vista.getNuevo3Btn().setOnAction(evento -> nuevoJuego(3));
         vista.getNuevo4Btn().setOnAction(evento -> nuevoJuego(4));
@@ -40,6 +41,11 @@ public class Juego21Controlador extends Application {
 
     private void quedarse() {
         modelo.quedarse();
+        vista.actualizarPantalla(modelo);
+    }
+
+    private void deshacer() {
+        modelo.deshacerMovimiento();
         vista.actualizarPantalla(modelo);
     }
 
