@@ -1,4 +1,4 @@
-package solitaire;
+package blackjack.practica1_alg20262.Modelo;
 
 public class Pila<T> {
     private T[] pila;
