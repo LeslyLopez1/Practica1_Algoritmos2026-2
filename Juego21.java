@@ -4,22 +4,23 @@ import blackjack.practica1_alg20262.Modelo.DeckOfCards.CartaInglesa;
 import blackjack.practica1_alg20262.Modelo.DeckOfCards.Mazo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Juego21 {
 
     private Mazo mazo;
-
-    //mano de cada jugador 1-4 + dealer
     private ArrayList<CartaInglesa> manoJugador1;
     private ArrayList<CartaInglesa> manoJugador2;
     private ArrayList<CartaInglesa> manoJugador3;
     private ArrayList<CartaInglesa> manoJugador4;
     private ArrayList<CartaInglesa> manoDealer;
-
     private int cantidadJugadores;
     private int turno;
     private boolean terminado;
     private String resultado;
+
+    //PILA
+    private Pila<Movimiento> movimientos;
 
     public Juego21() {
         iniciarNuevoJuego(1);
@@ -41,6 +42,7 @@ public class Juego21 {
         turno = 0;
         terminado = false;
         resultado = "";
+        movimientos = new Pila<>(50);
 
         for (int i = 0; i < cantidadJugadores; i++) {
             darCartaAJugador(i);
@@ -63,11 +65,6 @@ public class Juego21 {
         }
     }
 
-    private void darCartaAJugador(int i) {
-        CartaInglesa carta = mazo.obtenerUnaCarta();
-        carta.makeFaceUp();
-        getMano(i).add(carta);
-    }
 
     private void darCartaAlDealer(boolean bocaArriba) {
         CartaInglesa carta = mazo.obtenerUnaCarta();
@@ -84,6 +81,7 @@ public class Juego21 {
         if (terminado) {
             return;
         }
+        movimientos.push(new Movimiento("pedir",turno));
         darCartaAJugador(turno);
         if (getPuntosJugador(turno) > 21) {
             pasarTurno();
@@ -95,6 +93,7 @@ public class Juego21 {
         if (terminado) {
             return;
         }
+        movimientos.push(new Movimiento("quedarse",turno));
         pasarTurno();
     }
 
@@ -140,7 +139,7 @@ public class Juego21 {
     private void armarResultado() {
         int puntosDealer = getPuntosDealer();
 
-        // 1. mejor puntuación sin pasarse de 21
+        //1. mejor puntuación sin pasarse de 21
         int mejorPuntaje = 0;
         for (int i = 0; i < cantidadJugadores; i++) {
             int puntos = getPuntosJugador(i);
@@ -152,7 +151,7 @@ public class Juego21 {
             mejorPuntaje = puntosDealer;
         }
 
-        // 2. si alguien tiene Blackjack
+        //2. si alguien tiene Blackjack
         boolean hayBlackjack = esBlackjack(manoDealer);
         for (int i = 0; i < cantidadJugadores; i++) {
             if (esBlackjack(getMano(i))) {
@@ -160,7 +159,7 @@ public class Juego21 {
             }
         }
 
-        // 3. lista de ganadores incluyendo empates
+        //3.lista de ganadores incluyendo empates
         String ganadores = "";
         int cuantosGanan = 0;
         for (int i = 0; i < cantidadJugadores; i++) {
@@ -262,4 +261,35 @@ public class Juego21 {
     public String getResultado() {
         return resultado;
     }
+
+    private void darCartaAJugador(int i) {
+        CartaInglesa carta = mazo.obtenerUnaCarta();
+        carta.makeFaceUp();
+        getMano(i).add(carta);
+    }
+
+    //IMPLEMENTACION DE LA PILA PARA REVERTIR LOS MOVIMIENTOS
+    public void deshacerMovimiento(){
+        if (terminado || movimientos.pilaVacia()) {
+            return;
+        }
+
+        Movimiento ultimo = movimientos.pop();
+        int jugador = ultimo.getJugador();
+
+        if (ultimo.getTipo().equals("pedir")) {
+            ArrayList<CartaInglesa> mano = getMano(jugador);
+            CartaInglesa carta = mano.remove(mano.size()-1);
+            carta.makeFaceDown();
+            //mazo.getCartas().add(0,carta);
+            mazo.getCartas().add(carta);
+            mazo.mezclar();
+        }
+        turno = jugador;
+    }
+
+    public boolean hayMovimientos(){
+        return !movimientos.pilaVacia();
+    }
+
 }
