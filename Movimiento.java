@@ -4,7 +4,7 @@ public class Movimiento {
     private String tipo;
     private int jugador;
 
-    public Movimiento(String tipo) {
+    public Movimiento(String tipo, int jugador) {
         this.tipo = tipo;
         this.jugador=jugador;
     }
